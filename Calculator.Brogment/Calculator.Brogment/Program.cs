@@ -2,6 +2,7 @@
 using CalculatorLibrary;
 
 bool endApp = false;
+List<double> pastResults = [];
 // Display title as the C# console calculator app.
 Console.WriteLine("Console Calculator in C#\r");
 Console.WriteLine("------------------------\n");
@@ -13,44 +14,35 @@ while (!endApp)
 {
     // Declare variables and set to empty.
     // Use Nullable types (with ?) to match type of System.Console.ReadLine
-    string? numInput1 = "";
-    string? numInput2 = "";
+  
     double result = 0;
+
+    Console.WriteLine($"Times calculator used: {pastResults.Count}");
 
     // Ask the user to type the first number.
     Console.Write("Type a number, and then press Enter: ");
-    numInput1 = Console.ReadLine();
-
-    double cleanNum1 = 0;
-    while (!double.TryParse(numInput1, out cleanNum1))
-    {
-        Console.Write("This is not valid input. Please enter a numeric value: ");
-        numInput1 = Console.ReadLine();
-    }
+    double cleanNum1 = GetNumericInput();
 
     // Ask the user to type the second number.
     Console.Write("Type another number, and then press Enter: ");
-    numInput2 = Console.ReadLine();
+    double cleanNum2 = GetNumericInput();
 
-    double cleanNum2 = 0;
-    while (!double.TryParse(numInput2, out cleanNum2))
-    {
-        Console.Write("This is not valid input. Please enter a numeric value: ");
-        numInput2 = Console.ReadLine();
-    }
-
-    // Ask the user to choose an operator.
+    // Ask the user to choose an operator
+    Console.WriteLine($"x = {cleanNum1} | y = {cleanNum2}");
     Console.WriteLine("Choose an operator from the following list:");
     Console.WriteLine("\ta - Add");
     Console.WriteLine("\ts - Subtract");
     Console.WriteLine("\tm - Multiply");
     Console.WriteLine("\td - Divide");
+    Console.WriteLine("\tr - Take the y Root of x");
+    Console.WriteLine("\te - Raise x to the Power of y");
+
     Console.Write("Your option? ");
 
     string? op = Console.ReadLine();
 
     // Validate input is not null, and matches the pattern
-    if (op == null || !Regex.IsMatch(op, "[a|s|m|d]"))
+    if (op == null || !Regex.IsMatch(op, "[a|s|m|d|r|e]"))
     {
         Console.WriteLine("Error: Unrecognized input.");
     }
@@ -63,7 +55,11 @@ while (!endApp)
             {
                 Console.WriteLine("This operation will result in a mathematical error.\n");
             }
-            else Console.WriteLine("Your result: {0:0.##}\n", result);
+            else
+            {
+                Console.WriteLine("Your result: {0:0.##}\n", result);
+                pastResults.Add(result);
+            }
         }
         catch (Exception e)
         {
@@ -78,4 +74,15 @@ while (!endApp)
 
     Console.WriteLine("\n"); // Friendly linespacing.
 }
-return;
+
+double GetNumericInput()
+{
+    double cleanNum = 0;
+    while (!double.TryParse(Console.ReadLine(), out cleanNum))
+    {
+        Console.Write("This is not valid input. Please enter a numeric value: ");
+    }
+    return cleanNum;
+}
+
+calculator.Finish();
